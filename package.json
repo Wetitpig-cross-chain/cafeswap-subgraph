@@ -1,16 +1,12 @@
 {
-  "name": "cafeswap-subgraph",
+  "name": "sushiswap-bsc",
   "version": "1.0.0",
-  "repository": "git@github.com:CafeSwap/cafeswap-subgraph.git",
+  "repository": "https://github.com/Wetitpig-cross-chain/cafeswap-subgraph.git#sushiswap-bsc",
   "license": "GPL-3.0-or-later",
   "scripts": {
     "codegen": "graph codegen --output-dir src/types/",
     "build": "graph build",
-    "create-local": "graph cafeswap/cafeswap3 --node http://127.0.0.1:8020",
-    "deploy-local": "graph cafeswap/cafeswap3 --debug --ipfs http://localhost:5001 --node http://127.0.0.1:8020",
-    "deploy": "graph deploy cafeswap/cafeswap3 --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --debug",
-    "deploy-staging": "graph deploy $THE_GRAPH_GITHUB_USER/$THE_GRAPH_SUBGRAPH_NAME /Cafeswap --ipfs https://api.staging.thegraph.com/ipfs/ --node https://api.staging.thegraph.com/deploy/",
-    "watch-local": "graph deploy graphprotocol/Cafeswap --watch --debug --node http://127.0.0.1:8020/ --ipfs http://localhost:5001"
+    "deploy": "graph deploy Wetitpig-cross-chain/sushiswap-bsc --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --debug"
   },
   "devDependencies": {
     "@graphprotocol/graph-cli": "^0.19.0",
