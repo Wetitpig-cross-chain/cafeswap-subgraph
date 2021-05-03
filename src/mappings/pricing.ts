@@ -17,14 +17,14 @@ export function getEthPriceInUSD(): BigDecimal {
     '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d', // USDC
     '0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3', // DAI
   ]
-  let totalLiquidtyBNB: BigDecimal = 0
-  let individualLiquidityBNB: BigDecimal[] = [0, 0, 0, 0]
-  let price: BigDecimal[] = [0, 0, 0, 0]
-  let aggregatedPrice: BigDecimal = 0
+  let totalLiquidtyBNB: BigDecimal = ZERO_BD
+  let individualLiquidityBNB: BigDecimal[] = [ZERO_BD, ZERO_BD, ZERO_BD, ZERO_BD]
+  let price: BigDecimal[] = [ZERO_BD, ZERO_BD, ZERO_BD, ZERO_BD]
+  let aggregatedPrice: BigDecimal = ZERO_BD
   for (let i = 0; i < WHITELIST.length; ++i) {
     let pairAddress = factoryContract.getPair(Address.fromString(WBNB_ADDRESS), Address.fromString(WHITELIST[i]))
     if (pairAddress.toHexString() != ADDRESS_ZERO) {
-      let pair = Pair.load(pairAddress)
+      let pair = Pair.load(pairAddress.toHexString())
       if (pair.token0 == WBNB_ADDRESS && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
         totalLiquidtyBNB = totalLiquidtyBNB.plus(pair.reserve0)
         individualLiquidityBNB[i] = pair.reserve0
@@ -39,7 +39,7 @@ export function getEthPriceInUSD(): BigDecimal {
   }
 
   for (let i = 0; i < WHITELIST.length; ++i)
-    aggregatedPrice = aggregatedPrice.add(price[i].times(individualLiquidityBNB[i]).div(totalLiquidtyBNB))
+    aggregatedPrice = aggregatedPrice.plus(price[i].times(individualLiquidityBNB[i]).div(totalLiquidtyBNB))
   return aggregatedPrice
 }
 
