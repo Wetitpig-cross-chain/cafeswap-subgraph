@@ -38,9 +38,14 @@ export function getEthPriceInUSD(): BigDecimal {
     }
   }
 
-  for (let i = 0; i < WHITELIST.length; ++i)
-    aggregatedPrice = aggregatedPrice.plus(price[i].times(individualLiquidityBNB[i]).div(totalLiquidtyBNB))
-  return aggregatedPrice
+  if (totalLiquidtyBNB == ZERO_BD) {
+    return ZERO_BD
+  }
+  else {
+    for (let i = 0; i < WHITELIST.length; ++i)
+      aggregatedPrice = aggregatedPrice.plus(price[i].times(individualLiquidityBNB[i]).div(totalLiquidtyBNB))
+    return aggregatedPrice
+  }
 }
 
 // token where amounts should contribute to tracked volume and liquidity
