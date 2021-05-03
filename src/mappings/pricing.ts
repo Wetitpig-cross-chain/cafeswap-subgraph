@@ -9,35 +9,38 @@ const DAI_WBNB_PAIR = '0x1Dee6C84078123a4081ccFD55A60C35eEf6F1861'  // created b
 const USDT_WBNB_PAIR = '0xC1180f6aAF0b13c2157bf177327aCA91987ddF3a' // created block 648115
 
 export function getEthPriceInUSD(): BigDecimal {
-  // fetch eth prices for each stablecoin
-  let usdtPair = Pair.load(USDT_WBNB_PAIR) // usdt is token0
-  let busdPair = Pair.load(BUSD_WBNB_PAIR) // busd is token1
-  let daiPair = Pair.load(DAI_WBNB_PAIR)   // dai is token0
 
-  // all 3 have been created
-  if (daiPair !== null && busdPair !== null && usdtPair !== null) {
-    let totalLiquidityBNB = daiPair.reserve1.plus(busdPair.reserve0).plus(usdtPair.reserve1)
-    let daiWeight = daiPair.reserve1.div(totalLiquidityBNB)
-    let busdWeight = busdPair.reserve0.div(totalLiquidityBNB)
-    let usdtWeight = usdtPair.reserve1.div(totalLiquidityBNB)
-    return daiPair.token0Price
-      .times(daiWeight)
-      .plus(busdPair.token1Price.times(busdWeight))
-      .plus(usdtPair.token0Price.times(usdtWeight))
-    // busd and usdt have been created
-  } else if (busdPair !== null && usdtPair !== null) {
-    let totalLiquidityBNB = busdPair.reserve0.plus(usdtPair.reserve1)
-    let busdWeight = busdPair.reserve0.div(totalLiquidityBNB)
-    let usdtWeight = usdtPair.reserve1.div(totalLiquidityBNB)
-    return busdPair.token1Price.times(busdWeight).plus(usdtPair.token0Price.times(usdtWeight))
-    // usdt is the only pair so far
-  } else if (busdPair !== null) {
-    return busdPair.token1Price
-  } else if (usdtPair !== null) {
-    return usdtPair.token0Price
-  } else {
-    return ZERO_BD
+// USD stablecoins
+  let USDLIST: string[] = [
+    '0xe9e7cea3dedca5984780bafc599bd69add087d56', // BUSD
+    '0x55d398326f99059ff775485246999027b3197955', // USDT
+    '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d', // USDC
+    '0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3', // DAI
+  ]
+  let totalLiquidtyBNB = 0
+  let individualLiquidityBNB: BigDecimal[] = [0, 0, 0, 0]
+  let price: BigDecimal[] = [0, 0, 0, 0]
+  let aggregatedPrice = 0
+  for (let i = 0; i < WHITELIST.length; ++i) {
+    let pairAddress = factoryContract.getPair(Address.fromString(WBNB_ADDRESS), Address.fromString(WHITELIST[i]))
+    if (pairAddress.toHexString() != ADDRESS_ZERO) {
+      let pair = Pair.load(pairAddress)
+      if (pair.token0 == WBNB_ADDRESS && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
+        totalLiquidtyBNB = totalLiquidtyBNB.plus(pair.reserve0)
+        individualLiquidityBNB[i] = pair.reserve0
+        price[i] = pair.token1Price
+      }
+      if (pair.token1 == WBNB_ADDRESS && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
+        totalLiquidtyBNB = totalLiquidtyBNB.plus(pair.reserve1)
+        individualLiquidityBNB[i] = pair.reserve1
+        price[i] = pair.token0Price
+      }
+    }
   }
+
+  for (let i = 0; i < WHITELIST.length; ++i)
+    aggregatedPrice = aggregatedPrice.add(price[i].times(individualLiquidityBNB[i]).div(totalLiquidtyBNB))
+  return aggregatedPrice
 }
 
 // token where amounts should contribute to tracked volume and liquidity
