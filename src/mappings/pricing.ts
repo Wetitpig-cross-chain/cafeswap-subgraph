@@ -21,7 +21,7 @@ export function getEthPriceInUSD(): BigDecimal {
   let individualLiquidityBNB: BigDecimal[] = [ZERO_BD, ZERO_BD, ZERO_BD, ZERO_BD]
   let price: BigDecimal[] = [ZERO_BD, ZERO_BD, ZERO_BD, ZERO_BD]
   let aggregatedPrice: BigDecimal = ZERO_BD
-  for (let i = 0; i < WHITELIST.length; ++i) {
+  for (let i = 0; i < USDLIST.length; ++i) {
     let pairAddress = factoryContract.getPair(Address.fromString(WBNB_ADDRESS), Address.fromString(WHITELIST[i]))
     if (pairAddress.toHexString() != ADDRESS_ZERO) {
       let pair = Pair.load(pairAddress.toHexString())
@@ -42,7 +42,7 @@ export function getEthPriceInUSD(): BigDecimal {
     return ZERO_BD
   }
   else {
-    for (let i = 0; i < WHITELIST.length; ++i)
+    for (let i = 0; i < USDLIST.length; ++i)
       aggregatedPrice = aggregatedPrice.plus(price[i].times(individualLiquidityBNB[i]).div(totalLiquidtyBNB))
     return aggregatedPrice
   }
