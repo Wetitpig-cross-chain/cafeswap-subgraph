@@ -17,10 +17,10 @@ export function getEthPriceInUSD(): BigDecimal {
     '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d', // USDC
     '0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3', // DAI
   ]
-  let totalLiquidtyBNB = 0
+  let totalLiquidtyBNB: BigDecimal = 0
   let individualLiquidityBNB: BigDecimal[] = [0, 0, 0, 0]
   let price: BigDecimal[] = [0, 0, 0, 0]
-  let aggregatedPrice = 0
+  let aggregatedPrice: BigDecimal = 0
   for (let i = 0; i < WHITELIST.length; ++i) {
     let pairAddress = factoryContract.getPair(Address.fromString(WBNB_ADDRESS), Address.fromString(WHITELIST[i]))
     if (pairAddress.toHexString() != ADDRESS_ZERO) {
