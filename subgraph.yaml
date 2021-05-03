@@ -1,6 +1,6 @@
 specVersion: 0.0.2
-description: Cafeswap is a decentralized protocol for automated token exchange on Binance Smart Chain.
-repository: https://github.com/CafeSwap/cafeswap-subgraph
+description: Nyanswop is a decentralized protocol for automated token exchange on Binance Smart Chain.
+repository: https://github.com/Wetitpig-cross-chain/cafeswap-subgraph/tree/nyanswop
 schema:
   file: ./schema.graphql
 dataSources:
@@ -8,9 +8,9 @@ dataSources:
     name: Factory
     network: bsc
     source:
-      address: '0x3e708FdbE3ADA63fc94F8F61811196f1302137AD'
+      address: '0xF38D202723a9376C034eD5b8Cecb4EFe8f249836'
       abi: Factory
-      startBlock: 5865260
+      startBlock: 1336474
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
