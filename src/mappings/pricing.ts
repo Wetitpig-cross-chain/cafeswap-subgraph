@@ -22,7 +22,7 @@ export function getEthPriceInUSD(): BigDecimal {
   let price: BigDecimal[] = [ZERO_BD, ZERO_BD, ZERO_BD, ZERO_BD]
   let aggregatedPrice: BigDecimal = ZERO_BD
   for (let i = 0; i < USDLIST.length; ++i) {
-    let pairAddress = factoryContract.getPair(Address.fromString(WBNB_ADDRESS), Address.fromString(WHITELIST[i]))
+    let pairAddress = factoryContract.getPair(Address.fromString(WBNB_ADDRESS), Address.fromString(USDLIST[i]))
     if (pairAddress.toHexString() != ADDRESS_ZERO) {
       let pair = Pair.load(pairAddress.toHexString())
       if (pair.token0 == WBNB_ADDRESS && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
